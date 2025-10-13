@@ -1,5 +1,7 @@
 """
 LOGISTIC REGRESSION CLASSIFIER ON WILDFIRE DATASET
+Oisin Mc Laughlin
+22441106
 """
 
 import pandas as pd
@@ -26,15 +28,22 @@ print("\nFeatures and targets seperated:")
 print(x_train.head())
 print(y_train.head())
 
+
 # Init logistic regression model with max iterations of 1000
 lr_default = LogisticRegression(max_iter=1000)
 lr_default.fit(x_train, y_train)
 
-# Testing how well the model performs on the test data
-predictions = lr_default.predict(x_test)
-accuracy = metrics.accuracy_score(y_test, predictions)
+# Testing how well the model performs on the both the training and test data
+train_predictions = lr_default.predict(x_train)
+train_accuracy = metrics.accuracy_score(y_train, train_predictions)
+
+test_predictions = lr_default.predict(x_test)
+test_accuracy = metrics.accuracy_score(y_test, test_predictions)
+
 print("\nTesting linear regression model with default parameters")
-print("Default Accuracy: ", accuracy * 100, "%")
+print("Training Accuracy: ", train_accuracy * 100, "%")
+print("Test Accuracy: ", test_accuracy * 100, "%")
+
 
 # Hyperparam tuning
 penalty = [None , 'l2', 'l1', 'elasticnet']
@@ -45,6 +54,7 @@ print("Penalty: ", penalty)
 print("Tol: ", tol)
 print("Default penalty is l2 and default tol is 0.0001")
 
+results = []
 best_accuracy = 0
 best_params = {}
 
@@ -61,6 +71,7 @@ for p in penalty:
             solver_param = 'saga'
             l1_ratio_param = 0.5
 
+
         # Init logistic regression model with chosen hyperparameters
         lr_tuned = LogisticRegression(
             penalty= p,
@@ -71,12 +82,25 @@ for p in penalty:
         )
         lr_tuned.fit(x_train, y_train)
 
-        # Testing how well the model performs on the test data
-        predictions = lr_tuned.predict(x_test)
-        accuracy = metrics.accuracy_score(y_test, predictions)
 
-        if accuracy > best_accuracy:
-            best_accuracy = accuracy
+        # Testing how well the model performs on the training and test data
+        training_predictions = lr_tuned.predict(x_train)
+        training_accuracy = metrics.accuracy_score(y_train, training_predictions)
+
+        test_predictions = lr_tuned.predict(x_test)
+        test_accuracy = metrics.accuracy_score(y_test, test_predictions)
+
+        # record the results
+        results.append({
+            'penalty': p,
+            'tol': t,
+            'train_accuracy': training_accuracy,
+            'test_accuracy': test_accuracy
+        })
+
+        # if new best accuracy, store the parameters
+        if test_accuracy > best_accuracy:
+            best_accuracy = test_accuracy
             best_params = {'penalty': p, 'tol': t}
 
 print("\nBest Accuracy: ", best_accuracy * 100, "%")
