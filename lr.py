@@ -23,7 +23,7 @@ train_accuracy = metrics.accuracy_score(y_train, train_predictions)
 test_predictions = lr_default.predict(x_test)
 test_accuracy = metrics.accuracy_score(y_test, test_predictions)
 
-print("\nTesting linear regression model with default parameters")
+print("\nTesting Logistic Regression model with default parameters")
 print("Training Accuracy: ", train_accuracy * 100, "%")
 print("Test Accuracy: ", test_accuracy * 100, "%")
 
@@ -107,7 +107,7 @@ for p in penalty:
 
 # Labels and title etc
 plt.xlabel("Tol")
-plt.ylabel("Accuracy (%)")
+plt.ylabel("Accuracy")
 plt.title("Logistic Regression Hyperparameter Tuning")
 plt.legend()
 plt.tight_layout()
