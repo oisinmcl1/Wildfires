@@ -4,31 +4,13 @@ Oisin Mc Laughlin
 22441106
 """
 
-import pandas as pd
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
+from utils import get_data
 
-# Read the training and test data csv file with pandas
-train_data = pd.read_csv('wildfires_training.csv')
-test_data = pd.read_csv('wildfires_test.csv')
-
-print("\nTraining Data:")
-print(train_data.info())
-
-print("\nTest Data:")
-print(test_data.info())
-
-# Separate features and target data
-x_train = train_data.drop('fire', axis=1)
-y_train = train_data['fire']
-x_test = test_data.drop('fire', axis=1)
-y_test = test_data['fire']
-
-print("\nFeatures and targets seperated:")
-print(x_train.head())
-print(y_train.head())
-
+# Get the data using the utility function
+x_train, y_train, x_test, y_test = get_data()
 
 # Init logistic regression model with max iterations of 1000
 lr_default = LogisticRegression(max_iter=1000)
@@ -41,7 +23,7 @@ train_accuracy = metrics.accuracy_score(y_train, train_predictions)
 test_predictions = lr_default.predict(x_test)
 test_accuracy = metrics.accuracy_score(y_test, test_predictions)
 
-print("\nTesting linear regression model with default parameters")
+print("\nTesting Logistic Regression model with default parameters")
 print("Training Accuracy: ", train_accuracy * 100, "%")
 print("Test Accuracy: ", test_accuracy * 100, "%")
 
@@ -91,7 +73,7 @@ for p in penalty:
         test_predictions = lr_tuned.predict(x_test)
         test_accuracy = metrics.accuracy_score(y_test, test_predictions)
 
-        # record the results
+        # Record the results
         results.append({
             'penalty': p,
             'tol': t,
@@ -99,7 +81,7 @@ for p in penalty:
             'test_accuracy': test_accuracy
         })
 
-        # if new best accuracy, store the parameters
+        # If new best accuracy, store the parameters
         if test_accuracy > best_accuracy:
             best_accuracy = test_accuracy
             best_params = {'penalty': p, 'tol': t}
@@ -108,30 +90,27 @@ print("\nBest Accuracy: ", best_accuracy * 100, "%")
 print("Best Parameters: ", best_params)
 
 
-x_values = []
-y_values = []
-
-# add results to lists for plotting
-for r in results:
-    x_values.append(
-        str(r['penalty']) +
-        ", " +
-        str(r['tol'])
-    )
-
-    y_values.append(r['test_accuracy'] * 100)
-
-
 # Plot results
-plt.figure(figsize = (10, 5))
-plt.scatter(x_values, y_values)
-plt.plot(x_values, y_values)
+for p in penalty:
+    tol_values = []
+    accuracy_values = []
 
-# Labels and title
-plt.xlabel('Penalty and Tol Combination')
-plt.ylabel('Test Accuracy')
-plt.title('Logistic Regression Hyperparameter Tuning Results')
-plt.xticks(rotation = 90)
+    # For each result, if the penalty matches, add the tol and accuracy to the lists
+    for r in results:
+        if r['penalty'] == p:
+            tol_values.append(r['tol'])
+            accuracy_values.append(r['test_accuracy'] * 100)
+
+    # Plot the values for this penalty, with larger points and some transparency
+    plt.scatter(tol_values, accuracy_values, label="Penalty: " + str(p), s = 100, alpha = 0.7)
+    plt.plot(tol_values, accuracy_values)
+
+# Labels and title etc
+plt.xlabel("Tol")
+plt.ylabel("Accuracy")
+plt.title("Logistic Regression Hyperparameter Tuning")
+plt.legend()
 plt.tight_layout()
+plt.xscale('log')
 
 plt.show()
