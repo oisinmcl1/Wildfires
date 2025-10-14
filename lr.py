@@ -7,6 +7,7 @@ Oisin Mc Laughlin
 import pandas as pd
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
+import matplotlib.pyplot as plt
 
 # Read the training and test data csv file with pandas
 train_data = pd.read_csv('wildfires_training.csv')
@@ -105,3 +106,32 @@ for p in penalty:
 
 print("\nBest Accuracy: ", best_accuracy * 100, "%")
 print("Best Parameters: ", best_params)
+
+
+x_values = []
+y_values = []
+
+# add results to lists for plotting
+for r in results:
+    x_values.append(
+        str(r['penalty']) +
+        ", " +
+        str(r['tol'])
+    )
+
+    y_values.append(r['test_accuracy'] * 100)
+
+
+# Plot results
+plt.figure(figsize = (10, 5))
+plt.scatter(x_values, y_values)
+plt.plot(x_values, y_values)
+
+# Labels and title
+plt.xlabel('Penalty and Tol Combination')
+plt.ylabel('Test Accuracy')
+plt.title('Logistic Regression Hyperparameter Tuning Results')
+plt.xticks(rotation = 90)
+plt.tight_layout()
+
+plt.show()
