@@ -4,6 +4,7 @@ Oisin Mc Laughlin
 22441106
 """
 
+import pandas as pd
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
@@ -24,8 +25,8 @@ test_predictions = lr_default.predict(x_test)
 test_accuracy = metrics.accuracy_score(y_test, test_predictions)
 
 print("\nTesting Logistic Regression model with default parameters")
-print("Training Accuracy: ", train_accuracy * 100, "%")
-print("Test Accuracy: ", test_accuracy * 100, "%")
+print("Training Accuracy: ", round(train_accuracy * 100, 2), "%")
+print("Test Accuracy: ", round(test_accuracy * 100, 2), "%")
 
 
 # Hyperparam tuning
@@ -114,3 +115,14 @@ plt.tight_layout()
 plt.xscale('log')
 
 plt.show()
+
+
+# Convert results to df and save to csv
+results_df = pd.DataFrame(results)
+# To percentage 2 decimal places
+results_df['train_accuracy'] = (results_df['train_accuracy'] * 100).round(2)
+results_df['test_accuracy'] = (results_df['test_accuracy'] * 100).round(2)
+
+results_df.to_csv('lr_hyperparam_tuning_results.csv', index=False)
+print("\nResults saved to lr_hyperparam_tuning_results.csv")
+
