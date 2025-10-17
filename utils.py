@@ -46,16 +46,14 @@ def visualise_data():
     Returns:
         None
     """
-    # Exclude day, month, year cols
-    visual_train_data = train_data.drop(['day', 'month', 'year'], axis=1)
-    visual_test_data = test_data.drop(['day', 'month', 'year'], axis=1)
 
     # Visualise training and test data with histograms
-    visual_train_data.hist(figsize = (12, 10))
+    train_data.hist(figsize = (12, 10))
     plt.suptitle("Training Data")
+    plt.tight_layout()
     plt.show()
 
-    visual_test_data.hist(figsize = (12, 10))
+    test_data.hist(figsize = (12, 10))
     plt.suptitle("Test Data")
     plt.tight_layout()
     plt.show()
