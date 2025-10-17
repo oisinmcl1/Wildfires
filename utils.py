@@ -53,6 +53,7 @@ def visualise_data():
     # Visualise training and test data with histograms
     visual_train_data.hist(figsize = (12, 10))
     plt.suptitle("Training Data")
+    plt.tight_layout()
     plt.show()
 
     visual_test_data.hist(figsize = (12, 10))
