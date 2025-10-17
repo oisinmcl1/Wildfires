@@ -8,10 +8,11 @@ import pandas as pd
 from sklearn import metrics
 from sklearn.svm import SVC
 import matplotlib.pyplot as plt
-from utils import get_data
+from utils import get_data, visualise_data
 
-# Get the data using the utility function
+# Get the data using the utility function and visualise
 x_train, y_train, x_test, y_test = get_data()
+visualise_data()
 
 # Init SVM model
 svm_default = SVC()

@@ -8,10 +8,11 @@ import pandas as pd
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
-from utils import get_data
+from utils import get_data, visualise_data
 
-# Get the data using the utility function
+# Get the data using the utility function and visualise
 x_train, y_train, x_test, y_test = get_data()
+visualise_data()
 
 # Init logistic regression model with max iterations of 1000
 lr_default = LogisticRegression(max_iter=1000)
@@ -125,4 +126,3 @@ results_df['test_accuracy'] = (results_df['test_accuracy'] * 100).round(2)
 
 results_df.to_csv('lr_hyperparam_tuning_results.csv', index=False)
 print("\nResults saved to lr_hyperparam_tuning_results.csv")
-
